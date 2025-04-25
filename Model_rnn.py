@@ -46,9 +46,9 @@ class RNN(nn.Module):
         x = self.i2h(x)
         hidden_state = self.h2h(hidden_state)
         if self.act.lower() == 'tanh':
-            hidden_state = F.tanh(x + hidden_state)
+            hidden_state = torch.tanh(x + hidden_state)
         elif self.act.lower() == 'relu':
-            hidden_state = F.relu(x + hidden_state)
+            hidden_state = torch.relu(x + hidden_state)
         
         out = self.h2o(hidden_state)
         return out, hidden_state
@@ -74,36 +74,195 @@ class GRU(nn.Module):
     def init_zero_hidden(self, batch_size=1):
         return torch.zeros(1, batch_size, self.hidden_size, device=device)
     
+class DeepRNN(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, num_layers, act):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        self.num_layers = num_layers
+        self.act = act.lower()
+
+        self.i2h = nn.Linear(input_size, hidden_size, bias=False)
+        self.h2h_layers = nn.ModuleList([
+            nn.Linear(hidden_size, hidden_size) for _ in range(num_layers)
+        ])
+        self.h2o = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x, hidden_states):
+        x = self.i2h(x)
+        new_hidden_states = []
+
+        for i, h2h in enumerate(self.h2h_layers):
+            h = hidden_states[i]
+            h = h2h(h)
+            if self.act == 'tanh':
+                h = torch.tanh(x + h)
+            elif self.act == 'relu':
+                h = F.relu(x + h)
+            else:
+                raise ValueError(f"Unsupported activation: {self.act}")
+            new_hidden_states.append(h)
+            x = h  
+
+        out = self.h2o(x)
+        return out, new_hidden_states
+
+    def init_zero_hidden(self, batch_size=1):
+        device = next(self.parameters()).device
+        return [
+            torch.zeros(batch_size, self.hidden_size, device=device)
+            for _ in range(self.num_layers)
+        ]
     
+class DeepLSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, num_layers):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        self.num_layers = num_layers
+
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layers, batch_first=True)
+        self.h2o = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x, hidden_state):
+        output_seq, hidden_state = self.lstm(x, hidden_state)
+        out = self.h2o(output_seq)
+        return out, hidden_state
+
+    def init_zero_hidden(self, batch_size=1):
+        device = next(self.parameters()).device
+        h0 = torch.zeros(self.num_layers, batch_size, self.hidden_size, device=device)
+        c0 = torch.zeros(self.num_layers, batch_size, self.hidden_size, device=device)
+        return (h0, c0)
+    
+class DeepGRU(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, num_layers):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        self.num_layers = num_layers
+
+        self.gru = nn.GRU(input_size, hidden_size, num_layers=num_layers, batch_first=True)
+        self.h2o = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x, hidden_state):
+        output_seq, hidden_state = self.gru(x, hidden_state)
+        out = self.h2o(output_seq)
+        return out, hidden_state
+
+    def init_zero_hidden(self, batch_size=1):
+        device = next(self.parameters()).device
+        h0 = torch.zeros(self.num_layers, batch_size, self.hidden_size, device=device)
+        return h0
+
+class BidirectionalRNN(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, act):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        self.act = act
+
+        self.rnn = nn.RNN(input_size, hidden_size, batch_first=True, bidirectional=True)
+        self.h2o = nn.Linear(hidden_size * 2, output_size)  # *2 for bidirectional
+
+    def forward(self, x, hidden_state):
+        output_seq, hidden_state = self.rnn(x, hidden_state)
+        out = self.h2o(output_seq)
+        return out, hidden_state
+
+    def init_zero_hidden(self, batch_size=1):
+        device = next(self.parameters()).device
+        num_directions = 2  # forward + backward
+        h0 = torch.zeros(num_directions, batch_size, self.hidden_size, device=device)
+        return h0
+
+class BidirectionalLSTM(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        self.lstm = nn.LSTM(input_size, hidden_size, batch_first=True, bidirectional=True)
+        self.h2o = nn.Linear(hidden_size * 2, output_size)
+
+    def forward(self, x, hidden_state):
+        output_seq, hidden_state = self.lstm(x, hidden_state)
+        out = self.h2o(output_seq)
+        return out, hidden_state
+
+    def init_zero_hidden(self, batch_size=1):
+        device = next(self.parameters()).device
+        num_directions = 2  
+        h0 = torch.zeros(num_directions, batch_size, self.hidden_size, device=device)
+        c0 = torch.zeros(num_directions, batch_size, self.hidden_size, device=device)
+        return (h0, c0)
+
+class BidirectionalGRU(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super().__init__()
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+
+        self.gru = nn.GRU(input_size, hidden_size, batch_first=True, bidirectional=True)
+        self.h2o = nn.Linear(hidden_size * 2, output_size)  # *2 for bidirectional
+
+    def forward(self, x, hidden_state):
+        output_seq, hidden_state = self.gru(x, hidden_state)
+        out = self.h2o(output_seq)
+        return out, hidden_state
+
+    def init_zero_hidden(self, batch_size=1):
+        device = next(self.parameters()).device
+        num_directions = 2  # forward + backward
+        h0 = torch.zeros(num_directions, batch_size, self.hidden_size, device=device)
+        return h0
+
+
 class SeqModel(nn.Module):
-    def __init__(self, vocab_size, embed_size, hidden_size, output_size, batch_size, act, model_type):
+    def __init__(self, vocab_size, embed_size, hidden_size, output_size, batch_size, act, model_type, num_layers=1):
         super().__init__()
         self.model_type = model_type.lower()
         self.embedding = nn.Embedding(vocab_size, embed_size)
 
         if self.model_type == 'rnn':
-            self.rnn = RNN(input_size=embed_size, hidden_size=hidden_size, output_size=output_size, batch_size=batch_size, act=act)
+            self.rnn = RNN(embed_size, hidden_size, output_size, batch_size, act)
         elif self.model_type == 'lstm':
-            self.rnn = LSTM(input_size=embed_size, hidden_size=hidden_size, output_size=output_size, batch_size=batch_size, act=act)
+            self.rnn = LSTM(embed_size, hidden_size, output_size, batch_size, act)
         elif self.model_type == 'gru':
-            self.rnn = GRU(input_size=embed_size, hidden_size=hidden_size, output_size=output_size, batch_size=batch_size, act=act)
+            self.rnn = GRU(embed_size, hidden_size, output_size, batch_size, act)
+        elif self.model_type == 'deeprnn':
+            self.rnn = DeepRNN(embed_size, hidden_size, output_size, num_layers, act)
+        elif self.model_type == 'deeplstm':
+            self.rnn = DeepLSTM(embed_size, hidden_size, output_size, num_layers)
+        elif self.model_type == 'deepgru':
+            self.rnn = DeepGRU(embed_size, hidden_size, output_size, num_layers)
+        elif self.model_type == 'bilstm':
+            self.rnn = BidirectionalLSTM(embed_size, hidden_size, output_size)
+        elif self.model_type == 'birnn':
+            self.rnn = BidirectionalRNN(embed_size, hidden_size, output_size, act)
+        elif self.model_type == 'bigru':
+            self.rnn = BidirectionalGRU(embed_size, hidden_size, output_size)
         else:
-            raise ValueError("model_type must be one of: 'rnn', 'lstm', or 'gru'")
+            raise ValueError("model_type must be one of: rnn, lstm, gru, deeprnn, deeplstm, deepgru, bilstm, birnn, bigru")
 
     def forward(self, x, hidden):
         x_embed = self.embedding(x)
 
-        if self.model_type in ['lstm', 'gru']:
-            out, hidden = self.rnn(x_embed, hidden)
-        else:
+        if self.model_type in ['rnn', 'deeprnn']:
             outputs = []
             for t in range(x.size(1)):
                 out_t, hidden = self.rnn(x_embed[:, t], hidden)
                 outputs.append(out_t)
             out = torch.stack(outputs, dim=1)
-
+        else:
+            out, hidden = self.rnn(x_embed, hidden)
         return out
-
 
 
     
@@ -137,7 +296,7 @@ class RNN_Build:
             for X_batch, Y_batch in self.train_loader:
                 X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)
                 hidden = model.rnn.init_zero_hidden(X_batch.size(0))
-                if isinstance(hidden, tuple):
+                if isinstance(hidden, (list,tuple)):
                     hidden = tuple(h.to(device) for h in hidden)
                 else:
                     hidden = hidden.to(device)
@@ -148,7 +307,6 @@ class RNN_Build:
 
                 min_len = Y_batch.shape[1] 
                 
-                outputs = model(X_batch, hidden)
                 if pred.lower() == 'first':
                     pred_logits = outputs[:, :min_len, :]
                     target_tokens = Y_batch[:, :min_len]
@@ -163,6 +321,10 @@ class RNN_Build:
                 elif pred.lower() == 'last':
                     pred_logits = outputs[:, -min_len:, :]
                     target_tokens = Y_batch[:, -min_len:]
+                    
+                elif pred.lower() == 'full':
+                    pred_logits = outputs
+                    target_tokens = Y_batch
                     
                 else:
                     print('Please mention a valid Prediction Type (first, middle, last)')
@@ -182,6 +344,7 @@ class RNN_Build:
                 all_targets.append(target_tokens)
 
                 loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=5)
                 optimizer.step()
                 total_loss += loss.item()
 
@@ -233,7 +396,7 @@ class RNN_Build:
             for X_batch, Y_batch in self.test_loader:
                 X_batch, Y_batch = X_batch.to(device), Y_batch.to(device)
                 hidden = model.rnn.init_zero_hidden(X_batch.size(0))
-                if isinstance(hidden, tuple):
+                if isinstance(hidden, (list,tuple)):
                     hidden = tuple(h.to(device) for h in hidden)
                 else:
                     hidden = hidden.to(device)
@@ -253,6 +416,9 @@ class RNN_Build:
                 elif pred.lower() == 'last':
                     pred_logits = outputs[:, -min_len:, :]
                     target_tokens = Y_batch[:, -min_len:]
+                elif pred.lower() == 'full':
+                    pred_logits = outputs
+                    target_tokens = Y_batch
                 else:
                     print('Please mention a valid Prediction Type (first, middle, last)')
                     return
@@ -268,15 +434,11 @@ class RNN_Build:
                 target_tokens = target_tokens[mask]
 
                 if preds.numel() == 0 or target_tokens.numel() == 0:
-                    continue  # Skip empty predictions
+                    continue  
 
                 all_preds.append(preds)
                 all_targets.append(target_tokens)
                 total_loss += loss.item()
-
-        if not all_preds or not all_targets:
-            print("No predictions to evaluate.")
-            return 0, 0, 0, 0, 0
 
         all_preds = torch.cat(all_preds).cpu().tolist()
         all_targets = torch.cat(all_targets).cpu().tolist()

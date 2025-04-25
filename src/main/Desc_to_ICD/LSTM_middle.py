@@ -12,9 +12,9 @@ import pandas as pd
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-data_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/RNN_first'
-checkpoint_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/RNN_first/checkpoints'
-results_file = "/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/RNN_first/results.txt"
+data_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/LSTM_middle'
+checkpoint_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/LSTM_middle/checkpoints'
+results_file = "/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/LSTM_middle/results.txt"
 
 with open(results_file, "w") as file:
     file.write("")
@@ -80,6 +80,7 @@ lstm_build = RNN_Build(num_epochs=epochs, train_loader=train_loader, test_loader
 train_loss,test_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = lstm_build.train(model,pred='middle')
 
 results = {
+        'best_params': best_params,
         'train_loss': train_loss,
         'test_loss': test_loss,
         'train_accuracy': train_accuracy,

@@ -12,9 +12,9 @@ import pandas as pd
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-data_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/RNN_first'
-checkpoint_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/RNN_first/checkpoints'
-results_file = "/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/RNN_first/results.txt"
+data_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/LSTM_first'
+checkpoint_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/LSTM_first/checkpoints'
+results_file = "/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/Desc_to_ICD/LSTM_first/results.txt"
 
 with open(results_file, "w") as file:
     file.write("")
@@ -49,7 +49,7 @@ def objective(trial):
     embed_size = trial.suggest_int('embed_size', 50, 256)
     
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True,pin_memory=True,num_workers=4)
-    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False,pin_memory=True,num_workers=4)
+    val_loader = DataLoader(val_dataset, batch_size=1, shuffle=False,pin_memory=True,num_workers=4)
     
     model = SeqModel(vocab_size=vocab_size,embed_size=embed_size,hidden_size=hidden,output_size=output_size,batch_size=batch_size,act='relu',model_type='lstm') 
     lstm_build = RNN_Build(num_epochs=epochs, train_loader=train_loader, test_loader=val_loader, lr=lr, data_dir=data_dir,save_ckpt_dir=checkpoint_dir,vocab_size=output_size)
@@ -80,6 +80,7 @@ lstm_build = RNN_Build(num_epochs=epochs, train_loader=train_loader, test_loader
 train_loss,test_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = lstm_build.train(model,pred='first')
 
 results = {
+        'best_params': best_params,
         'train_loss': train_loss,
         'test_loss': test_loss,
         'train_accuracy': train_accuracy,

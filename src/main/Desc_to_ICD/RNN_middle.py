@@ -80,6 +80,7 @@ rnn_build = RNN_Build(num_epochs=epochs, train_loader=train_loader, test_loader=
 train_loss,test_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = rnn_build.train(model,pred='middle')
 
 results = {
+        'best_params': best_params,
         'train_loss': train_loss,
         'test_loss': test_loss,
         'train_accuracy': train_accuracy,
