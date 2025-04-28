@@ -12,7 +12,7 @@ import pandas as pd
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-data_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/ICD_to_Desc/GRU/checkpoints'
+data_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/ICD_to_Desc/GRU/'
 checkpoint_dir = '/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/ICD_to_Desc/GRU/checkpoints'
 results_file = "/home/careinfolab/Dr_Luo/Rohan/ICD_Codes/Results/ICD_to_Desc/GRU/results.txt"
 

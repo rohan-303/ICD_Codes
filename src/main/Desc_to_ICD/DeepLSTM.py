@@ -54,7 +54,7 @@ def objective(trial):
     
     model = SeqModel(vocab_size=vocab_size,embed_size=embed_size,hidden_size=hidden,output_size=output_size,batch_size=batch_size,act='relu',model_type='deeplstm',num_layers=num_layers) 
     rnn_build = RNN_Build(num_epochs=epochs, train_loader=train_loader, test_loader=val_loader, lr=lr, data_dir=data_dir,save_ckpt_dir=checkpoint_dir,vocab_size=output_size)
-    train_loss,val_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = rnn_build.train(model,pred='middle')
+    train_loss,val_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = rnn_build.train(model,pred='last')
     
     return val_avg_loss
 
@@ -79,7 +79,7 @@ model = SeqModel(vocab_size=vocab_size,embed_size=embed_size,hidden_size=hidden,
  
 rnn_build = RNN_Build(num_epochs=epochs, train_loader=train_loader, test_loader=test_loader, lr=lr, data_dir=data_dir,save_ckpt_dir=checkpoint_dir,vocab_size=vocab_size)
 
-train_loss,test_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = rnn_build.train(model,pred='middle')
+train_loss,test_loss,train_accuracy,train_precision,train_recall,train_f1score,test_accuracy,test_precision,test_recall,test_f1score,val_avg_loss = rnn_build.train(model,pred='last')
 
 results = {
         'best params': best_params,
