@@ -35,9 +35,9 @@ test_data = test_val.sample(frac=2/3, random_state=42)
 val_data = test_val.drop(test_data.index)
 train_data = df_full
 
-train_dataset = TranslationDataset(train_data, tokenizer, 'ICD_Code', 'Description', seq_len)
-val_dataset = TranslationDataset(val_data, tokenizer, 'ICD_Code', 'Description', seq_len)
-test_dataset = TranslationDataset(test_data, tokenizer, 'ICD_Code', 'Description', seq_len)
+train_dataset = TransformerDataset(train_data, tokenizer, 'ICD_Code', 'Description', seq_len)
+val_dataset = TransformerDataset(val_data, tokenizer, 'ICD_Code', 'Description', seq_len)
+test_dataset = TransformerDataset(test_data, tokenizer, 'ICD_Code', 'Description', seq_len)
 
 def objective(trial):
     lr = trial.suggest_float('lr', 0.0001, 0.001)

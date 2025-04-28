@@ -24,7 +24,7 @@ def extract_tensor_ids(s):
         raise ValueError(f"Unexpected data type: {type(s)}")
     
     
-class TranslationDataset(Dataset):
+class TransformerDataset(Dataset):
     def __init__(self, df,tokenizer, src_lang, tgt_lang, seq_len):
         self.df = df
         self.seq_len = seq_len
