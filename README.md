@@ -9,84 +9,84 @@ This repository contains a deep learning-based system for translating **ICD-10 c
 
 ```bash
 Survival_Model/
-│── Dataset/                          # Contains datasets (before and after preprocessing)
-│   ├── icd10-codes-and-descriptions/                       # Raw datasets before preprocessing
+│── Dataset/                         
+│   ├── icd10-codes-and-descriptions/         # This folder contains all the datasets required for this project
 │
-│── Notebook/             # Scripts and notebooks for dataset preprocessing
-│   ├── data_cleaning.ipynb                   # Preprocessing for Metabric dataset
-│   ├── data_collection&Analysis.ipynb                    # Preprocessing for Support dataset
-│   ├── Evaluation_Desc_ICD.ipynb                       # Preprocessing for PBC2 dataset
-│   ├── Evaluation_ICD_Desc.ipynb                # This python notebook has the code for cox data generation along with including and excluding units.
-│   ├── Testing_ICD_Desc.ipynb
-│   ├── Testing_ICD_Desc.ipynb
-│   ├── Tokenization.ipynb
+│── Notebook/            
+│   ├── data_cleaning.ipynb                   # This notebook has cleaning code for ICD raw dataset
+│   ├── data_collection&Analysis.ipynb        # This notebook has the code for Dataset Extraction and EDA on Cleaned Dataset.
+│   ├── Evaluation_Desc_ICD.ipynb             # This notebook has the graphs of both training and tetsing data for all models used in Description to ICD Code conversion
+│   ├── Evaluation_ICD_Desc.ipynb             # This notebook has the graphs of both training and tetsing data for all models used in ICD Code to Description conversion
+│   ├── Testing_Desc_ICD.ipynb                # This notebook has the code for using the best model to generate ICD Code from Description from every models used.
+│   ├── Testing_ICD_Desc.ipynb                # This notebook has the code for using the best model to generate Description from Desction from every models used.
+│   ├── Tokenization.ipynb                    # This notebook has the code for using BPE tokenizer and adding padding before using Seq2Seq models.
 │
-│── Results/                       # Example usage of the Survival Model
+│── Results/                      
 │   ├── Desc_to_ICD/
-│   │   │   ├── BiGRU/
-│   │   │   ├── BiLSTM/
-│   │   │   ├── BiRNN/
-│   │   │   ├── DeepGRU/
-│   │   │   ├── DeepLSTM/
-│   │   │   ├── DeepRNN/
-│   │   │   ├── GRU_first/
-│   │   │   ├── GRU_last/
-│   │   │   ├── GRU_middle/
-│   │   │   ├── LSTM_last/
-│   │   │   ├── LSTM_first/
-│   │   │   ├── LSTM_middle/
-│   │   │   ├── RNN_first/
-│   │   │   ├── RNN_last/
-│   │   │   ├── RNN_middle/
-│   │   │   ├── Transfomer/             
+│   │   │   ├── BiGRU/                        # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Bidirectional GRU model
+│   │   │   ├── BiLSTM/                       # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Bidirectional LSTM model
+│   │   │   ├── BiRNN/                        # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Bidirectional RNN model
+│   │   │   ├── DeepGRU/                      # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Deep GRU model
+│   │   │   ├── DeepLSTM/                     # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Deep LSTM model
+│   │   │   ├── DeepRNN/                      # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Deep RNN Model
+│   │   │   ├── GRU_first/                    # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the GRU model with using first 5 tokens
+│   │   │   ├── GRU_last/                     # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the GRU model with using last 5 tokens
+│   │   │   ├── GRU_middle/                   # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the GRU model with using middle 5 tokens
+│   │   │   ├── LSTM_last/                    # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the LSTM model with using last 5 tokens
+│   │   │   ├── LSTM_first/                   # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the LSTM model with using first 5 tokens
+│   │   │   ├── LSTM_middle/                  # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the LSTM model with using middle 5 tokens
+│   │   │   ├── RNN_first/                    # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the RNN model with using first 5 tokens
+│   │   │   ├── RNN_last/                     # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the RNN model with using last 5 tokens
+│   │   │   ├── RNN_middle/                   # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the RNN model with using middle 5 tokens
+  │   │   │   ├── Transfomer/                 # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Transformers model
 │   ├── ICD_to_Desc/
-│   │   │   ├── BiGRU/
-│   │   │   ├── BiLSTM/
-│   │   │   ├── BiRNN/
-│   │   │   ├── DeepGRU/
-│   │   │   ├── DeepLSTM/
-│   │   │   ├── DeepRNN/
-│   │   │   ├── GRU/
-│   │   │   ├── LSTM/
-│   │   │   ├── RNN/
-│   │   │   ├── Transfomer/                  # LOCF (Last Observation Carried Forward) method examples
+│   │   │   ├── BiGRU/                        # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Bidirectional GRU model
+│   │   │   ├── BiLSTM/                       # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Bidirectional LSTM model
+│   │   │   ├── BiRNN/                        # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Bidirectional RNN model
+│   │   │   ├── DeepGRU/                      # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Deep GRU model
+│   │   │   ├── DeepLSTM/                     # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Deep LSTM model
+│   │   │   ├── DeepRNN/                      # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Deep RNN model
+│   │   │   ├── GRU/                          # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the GRU model
+│   │   │   ├── LSTM/                         # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the LSTM model
+│   │   │   ├── RNN/                          # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the RNN model
+│   │   │   ├── Transfomer/                   # This folder has all the saved metrics of testing data on best model and also has the best hyperparameters for the Transformers model
 │
-│── src/                            # Source code for the project
-│   ├── main/                       # Main scripts
-│   │   ├── Desc_to_ICD/               # Baseline data processing and models
-│   │   │   ├── BiGRU.py
-│   │   │   ├── BiLSTM.py
-│   │   │   ├── BiRNN.py
-│   │   │   ├── DeepGRU.py
-│   │   │   ├── DeepLSTM.py
-│   │   │   ├── DeepRNN.py
-│   │   │   ├── GRU_first.py
-│   │   │   ├── GRU_last.py
-│   │   │   ├── GRU_middle.py
-│   │   │   ├── LSTM_last.py
-│   │   │   ├── LSTM_first.py
-│   │   │   ├── LSTM_middle.py
-│   │   │   ├── RNN_first.py
-│   │   │   ├── RNN_last.py
-│   │   │   ├── RNN_middle.py
-│   │   │   ├── Transfomer.py 
+│── src/                            
+│   ├── main/                      
+│   │   ├── Desc_to_ICD/               
+│   │   │   ├── BiGRU.py                      # This python file has the code of implementing Bidirectional GRU model along with optuna hyperparameter tuning.
+│   │   │   ├── BiLSTM.py                     # This python file has the code of implementing Bidirectional LSTM model along with optuna hyperparameter tuning.
+│   │   │   ├── BiRNN.py                      # This python file has the code of implementing Bidirectional RNN model along with optuna hyperparameter tuning.
+│   │   │   ├── DeepGRU.py                    # This python file has the code of implementing Deep GRU model along with optuna hyperparameter tuning.
+│   │   │   ├── DeepLSTM.py                   # This python file has the code of implementing Deep LSTM model along with optuna hyperparameter tuning.
+│   │   │   ├── DeepRNN.py                    # This python file has the code of implementing Deep RNN model along with optuna hyperparameter tuning.
+│   │   │   ├── GRU_first.py                  # This python file has the code of implementing GRU model with first 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── GRU_last.py                   # This python file has the code of implementing GRU model with last 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── GRU_middle.py                 # This python file has the code of implementing GRU model with middle 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── LSTM_last.py                  # This python file has the code of implementing LSTM model with last 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── LSTM_first.py                 # This python file has the code of implementing LSTM model with first 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── LSTM_middle.py                # This python file has the code of implementing LSTM model with middle 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── RNN_first.py                  # This python file has the code of implementing RNN model with first 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── RNN_last.py                   # This python file has the code of implementing RNN model with last 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── RNN_middle.py                 # This python file has the code of implementing RNN model with middle 5 tokens as output(ICD Codes tokens) along with optuna hyperparameter tuning.
+│   │   │   ├── Transfomer.py                 # This python file has the code of implementing Transformers model along with optuna hyperparameter tuning.
 │   │   ├── ICD_to_Desc/
-│   │   │   ├── BiGRU.py
-│   │   │   ├── BiLSTM.py
-│   │   │   ├── BiRNN.py
-│   │   │   ├── DeepGRU.py
-│   │   │   ├── DeepLSTM.py
-│   │   │   ├── DeepRNN.py
-│   │   │   ├── GRU.py
-│   │   │   ├── LSTM.py
-│   │   │   ├── RNN.py
-│   │   │   ├── Transfomer.py                     # Implementation of Time-Varying survival models
+│   │   │   ├── BiGRU.py                      # This python file has the code of implementing Bidirectional GRU model along with optuna hyperparameter tuning.
+│   │   │   ├── BiLSTM.py                     # This python file has the code of implementing Bidirectional LSTM model along with optuna hyperparameter tuning.
+│   │   │   ├── BiRNN.py                      # This python file has the code of implementing Bidirectional RNN model along with optuna hyperparameter tuning.
+│   │   │   ├── DeepGRU.py                    # This python file has the code of implementing Deep GRU model along with optuna hyperparameter tuning.
+│   │   │   ├── DeepLSTM.py                   # This python file has the code of implementing Deep LSTM model along with optuna hyperparameter tuning.
+│   │   │   ├── DeepRNN.py                    # This python file has the code of implementing Deep RNN model along with optuna hyperparameter tuning.
+│   │   │   ├── GRU.py                        # This python file has the code of implementing GRU model along with optuna hyperparameter tuning.
+│   │   │   ├── LSTM.py                       # This python file has the code of implementing LSTM model along with optuna hyperparameter tuning.
+│   │   │   ├── RNN.py                        # This python file has the code of implementing RNN model along with optuna hyperparameter tuning.
+│   │   │   ├── Transfomer.py                 # This python file has the code of implementing Transformers model along with optuna hyperparameter tuning.
 │   │
-├── Model_rnn.py              # Concordance calculation for Time-invariant Covariates (Encoder)
-├── Transformer_model.py        # This file has the neural network code 
-├── utils.py       # Contains the functions for Cox Model, DeepSurv, RDSM(Deep Recurrent Survial Machine) for our loss, DRSM(Deep Recurrent Survival Machine Exluding our loss) using their loss which is commented out
-│── requirements.txt                # List of required Python libraries
-│── README.md                       # Project documentation
+├── Model_rnn.py                              # This python file has the code of all seq2seq models used along with the train function
+├── Transformer_model.py                      # This python file has the code of all modules in transformer architecture used along with the train function
+├── utils.py                                  # This python file has the supported dataset function which was used before passing into the model
+│── requirements.txt                          # List of required Python libraries
+│── README.md                                 # Project documentation
 
 ```
 
