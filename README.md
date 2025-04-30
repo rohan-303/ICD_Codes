@@ -1,4 +1,5 @@
-# ICD Code to Clinical Description Mapping using Transformer and Seq2Seq Models
+# Mapping the Lexicon of Healthcare: Connecting ICD codes to Clinical narratives
+
 
 This repository contains a deep learning-based system for translating **ICD-10 codes** into their corresponding **clinical descriptions**, and vice versa. We implemented and compared traditional **Seq2Seq models** (RNN, LSTM, GRU and their deep/bidirectional forms) with a custom-built **Transformer architecture**, achieving state-of-the-art results in both scenarios.
 
