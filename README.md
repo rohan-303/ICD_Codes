@@ -9,72 +9,82 @@ This repository contains a deep learning-based system for translating **ICD-10 c
 
 ```bash
 Survival_Model/
-│── data/                          # Contains datasets (before and after preprocessing)
-│   ├── raw/                       # Raw datasets before preprocessing
-│   ├── processed/                  # Processed datasets after preprocessing
+│── Dataset/                          # Contains datasets (before and after preprocessing)
+│   ├── icd10-codes-and-descriptions/                       # Raw datasets before preprocessing
 │
-│── data_preprocessing/             # Scripts and notebooks for dataset preprocessing
-│   ├── Metabric.ipynb                   # Preprocessing for Metabric dataset
-│   ├── Support.ipynb                    # Preprocessing for Support dataset
-│   ├── PBC2.ipynb                       # Preprocessing for PBC2 dataset
-│   ├── Syn_TimeVar.ipynb                # This python notebook has the code for cox data generation along with including and excluding units.
+│── Notebook/             # Scripts and notebooks for dataset preprocessing
+│   ├── data_cleaning.ipynb                   # Preprocessing for Metabric dataset
+│   ├── data_collection&Analysis.ipynb                    # Preprocessing for Support dataset
+│   ├── Evaluation_Desc_ICD.ipynb                       # Preprocessing for PBC2 dataset
+│   ├── Evaluation_ICD_Desc.ipynb                # This python notebook has the code for cox data generation along with including and excluding units.
+│   ├── Testing_ICD_Desc.ipynb
+│   ├── Testing_ICD_Desc.ipynb
+│   ├── Tokenization.ipynb
 │
-│── examples/                       # Example usage of the Survival Model
-│   ├── using_baseline_obs/         # Baseline observation examples (Metabric, PBC2, Support)
-│   ├── using_cox_synthetic_data/   # Cox synthetic data generation examples
-│   │   │   ├── EncoderCox_exp2.ipynb.ipynb/            # This python notebook has the insights for EnocderCox(After including units) and Deep Recurrent Survival Machine(After Including Units)
-│   │   │   ├── EncoderCox_experiments.ipynb/            # This python notebook is to visualize the c-index from the output of EncoderCox_experiments.py
-│   │   │   ├── Syn_Linear_cox.ipynb/             # This pyton Notebook has the comparision across all the model for Linear Data (Linear Time-invariant) 
-│   │   │   ├── Syn_Non-Linear_Cox.ipynb/         # This pyton Notebook has the comparision across all the model for Linear Data (Non-Linear Time-invariant) 
-│   │   │   ├── Syn_TimeVar.ipynb/            # This python Notebook has the visualization of all the time-varying models like Cox, EncoderCox, RNN, LSTM, GRU.
-│   ├── using_LOCF/                 # LOCF (Last Observation Carried Forward) method examples
-│
-│── results/                        # Results from different experiments
-│   ├── baseline_obs/               # Results from baseline observation models (Metabric, PBC2, Support)
-│   ├── cox_synthetic_data/         # Results from Cox synthetic models (Linear, Non-Linear, Time-Varying)
-│   │   │   ├── Linear/             # Cox synthetic Linear data models (Linear, Non-Linear, Time-Varying)
-│   │   │   ├── Non-Linear/         # Cox synthetic Non-Linear data models (Linear, Non-Linear, Time-Varying)
-│   │   │   ├── TimeVar/            # Cox synthetic data models (Time-Varying)
-│   │   │   │   ├── Cox_Model/      # This file contains a results.txt, all_simulations_results.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex.pth(Has the list of 0.25,0.50,0.75 test c-index)
-│   │   │   │   ├── DRSM/             # This file contains a results.txt, all_simulations_results_{number}.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex_{number}.pth(Has the list of 0.25,0.50,0.75 test c-index), val_cindex_{number}.pth (The number indicates the placeholder of interval_list which was used in DRSM.py)
-│   │   │   │   ├── EncoderCox_exp2/                # This file contains a results.txt, all_simulations_results_{number}.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex_{number}.pth(Has the list of 0.25,0.50,0.75 test c-index), val_cindex_{number}.pth (The number indicates the placeholder of interval_list which was used in DRSM.py)
-│   │   │   │   ├── EncoderCox_experiments/            # This file has the individual test and val c-index's along with the results to the simulation
-│   │   │   │   ├── EncoderCox/            # This file contains a results.txt, all_simulations_results.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex.pth(after using torch.load it contains the list of 0.25,0.50,0.75 test c-index), val_cindex.pth(Ater using torch.load it contains the list of 0.25,0.50,0.75 test c-index)
-│   │   │   │   ├── RDSM/            # EncoderCox model For TimeVarying (Has previous cox data generation, Excluding Units ) (Here units indicates Different Interval Lengths) 
-│   │   │   │   │   ├── GRU/              # This file contains a results.txt, all_simulations_results.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex.pth(after using torch.load it contains the list of 0.25,0.50,0.75 test c-index)
-│   │   │   │   │   ├── LSTM/             # This file contains a results.txt, all_simulations_results.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex.pth(after using torch.load it contains the list of 0.25,0.50,0.75 test c-index)
-│   │   │   │   │   ├── RNN/              # This file contains a results.txt, all_simulations_results.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex.pth(after using torch.load it contains the list of 0.25,0.50,0.75 test c-index)
-│   │   │   │   ├── Transformer/      # This file contains a results.txt, all_simulations_results.pth(After using torch.load, contains the Dictionary of all the parameters used in the simulation), test_cindex.pth(after using torch.load it contains the list of 0.25,0.50,0.75 test c-index)
-│   ├── LOCF/                       # Results from LOCF (Last Observation Carried Forward) method
+│── Results/                       # Example usage of the Survival Model
+│   ├── Desc_to_ICD/
+│   │   │   ├── BiGRU/
+│   │   │   ├── BiLSTM/
+│   │   │   ├── BiRNN/
+│   │   │   ├── DeepGRU/
+│   │   │   ├── DeepLSTM/
+│   │   │   ├── DeepRNN/
+│   │   │   ├── GRU_first/
+│   │   │   ├── GRU_last/
+│   │   │   ├── GRU_middle/
+│   │   │   ├── LSTM_last/
+│   │   │   ├── LSTM_first/
+│   │   │   ├── LSTM_middle/
+│   │   │   ├── RNN_first/
+│   │   │   ├── RNN_last/
+│   │   │   ├── RNN_middle/
+│   │   │   ├── Transfomer/             
+│   ├── ICD_to_Desc/
+│   │   │   ├── BiGRU/
+│   │   │   ├── BiLSTM/
+│   │   │   ├── BiRNN/
+│   │   │   ├── DeepGRU/
+│   │   │   ├── DeepLSTM/
+│   │   │   ├── DeepRNN/
+│   │   │   ├── GRU/
+│   │   │   ├── LSTM/
+│   │   │   ├── RNN/
+│   │   │   ├── Transfomer/                  # LOCF (Last Observation Carried Forward) method examples
 │
 │── src/                            # Source code for the project
 │   ├── main/                       # Main scripts
-│   │   ├── baseline/               # Baseline data processing and models
-│   │   ├── cox_synthetic_data/     # Cox synthetic data generation models 
-│   │   │   ├── Linear/             # Cox synthetic Linear data models
-│   │   │   ├── Non-Linear/         # Cox synthetic Non-Linear data models
-│   │   │   ├── TimeVar/            # Cox synthetic data models (Time-Varying)
-│   │   │   │   ├── Cox.py          # Time Varying cox model along with Cox Data generation
-│   │   │   │   ├── DRSM.py             # Deep Recurrent Survival Machine Code for Time Varying (Cox Data generation with including units) (Here units indicates Different Interval Lengths) 
-│   │   │   │   ├── EncoderCox_exp2.py               # EncoderCox model with different interval_lengths to see if there is any change in c-index 
-│   │   │   │   ├── EncoderCox_experiments.py            # Dummy EncoderCox model without optuna and fixed parameters to get the fast results
-│   │   │   │   ├── EncoderCox.py            # EncoderCox model For TimeVarying (Has previous cox data generation, Excluding Units ) (Here units indicates Different Interval Lengths) 
-│   │   │   │   ├── GRU.py              # Gated Recurrent Unit Code from Deep Recurrent Survival Machine (Cox Data generation excluding units) (Here units indicates Different Interval Lengths) 
-│   │   │   │   ├── LSTM.py             # Long Short term Memory from Deep Recurrent Survival Machine (Cox Data generation excluding units) (Here units indicates Different Interval Lengths) 
-│   │   │   │   ├── RNN.py              # Recurrent Neural Network from Deep Recurrent Survival Machine (Cox Data generation excluding units) (Here units indicates Different Interval Lengths) 
-│   │   │   │   ├── Transformer.py      # Original Transformer Model (Cox Data generation excluding unit)  (Here units indicates Different Interval Lengths) 
-│   │   ├── LOCF/                   # Implementation of Time-Varying survival models
+│   │   ├── Desc_to_ICD/               # Baseline data processing and models
+│   │   │   ├── BiGRU.py
+│   │   │   ├── BiLSTM.py
+│   │   │   ├── BiRNN.py
+│   │   │   ├── DeepGRU.py
+│   │   │   ├── DeepLSTM.py
+│   │   │   ├── DeepRNN.py
+│   │   │   ├── GRU_first.py
+│   │   │   ├── GRU_last.py
+│   │   │   ├── GRU_middle.py
+│   │   │   ├── LSTM_last.py
+│   │   │   ├── LSTM_first.py
+│   │   │   ├── LSTM_middle.py
+│   │   │   ├── RNN_first.py
+│   │   │   ├── RNN_last.py
+│   │   │   ├── RNN_middle.py
+│   │   │   ├── Transfomer.py 
+│   │   ├── ICD_to_Desc/
+│   │   │   ├── BiGRU.py
+│   │   │   ├── BiLSTM.py
+│   │   │   ├── BiRNN.py
+│   │   │   ├── DeepGRU.py
+│   │   │   ├── DeepLSTM.py
+│   │   │   ├── DeepRNN.py
+│   │   │   ├── GRU.py
+│   │   │   ├── LSTM.py
+│   │   │   ├── RNN.py
+│   │   │   ├── Transfomer.py                     # Implementation of Time-Varying survival models
 │   │
-│   ├── concordance.py              # Concordance calculation for Time-invariant Covariates (Encoder)
-│   ├── Transformer_utils.py        # This file has the neural network code 
-│   ├── other_models_utils.py       # Contains the functions for Cox Model, DeepSurv, RDSM(Deep Recurrent Survial Machine) for our loss, DRSM(Deep Recurrent Survival Machine Exluding our loss) using their loss which is commented out
-│   ├── My_model_utils.py           # Contains the functions for Time Varying Cox Model, Original Trnasformer for time Vraying , EncoderCox (Our Model)
-│   ├── DRSM_init.py                # Contains all the Deep Recurrent Survival Model initialization code including Compute_Risk function and Compute_Loss function while evaluation.
-│   ├── DRSM_loss.py                # This file has the loss functions used in Deep Recurrent Survival Machines(Not used any for our task) 
-│   ├── DRSM_torch.py               # Contains the code for model(RNN,LSTM,GRU)
-│   ├── DRSM_utils.py               # This file contains the train function for Deep Recurrent Survival Model
-
-│
+├── Model_rnn.py              # Concordance calculation for Time-invariant Covariates (Encoder)
+├── Transformer_model.py        # This file has the neural network code 
+├── utils.py       # Contains the functions for Cox Model, DeepSurv, RDSM(Deep Recurrent Survial Machine) for our loss, DRSM(Deep Recurrent Survival Machine Exluding our loss) using their loss which is commented out
 │── requirements.txt                # List of required Python libraries
 │── README.md                       # Project documentation
 
