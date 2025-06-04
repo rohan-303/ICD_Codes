@@ -9,7 +9,7 @@ This repository contains a deep learning-based system for translating **ICD-10 c
 
 
 ```bash
-Survival_Model/
+ICD_Codes/
 │── Dataset/                         
 │   ├── icd10-codes-and-descriptions/         # This folder contains all the datasets required for this project
 │
