@@ -3,6 +3,7 @@
 
 This repository contains a deep learning-based system for translating **ICD-10 codes** into their corresponding **clinical descriptions**, and vice versa. We implemented and compared traditional **Seq2Seq models** (RNN, LSTM, GRU and their deep/bidirectional forms) with a custom-built **Transformer architecture**, achieving state-of-the-art results in both scenarios.
 
+Report Link: https://drive.google.com/file/d/14gB05Um_0qyZD86GkBwHKjervR0vdgY_/view?usp=sharing
 ---
 
 ## Project Structure
